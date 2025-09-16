@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Connect Button Test</title>
+</head>
+<body>
+    <h1>Testing Connect Now Button</h1>
+    <input type="text" id="username-input" placeholder="Enter username" value="TestUser">
+    <button id="connect-btn">Connect Now</button>
+    <div id="status"></div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+        
+        document.getElementById('connect-btn').addEventListener('click', async () => {
+            const status = document.getElementById('status');
+            status.innerHTML = 'Testing connection...<br>';
+            
+            try {
+                // Test IPC communication
+                status.innerHTML += 'Testing IPC...<br>';
+                const port = await ipcRenderer.invoke('get-server-port');
+                status.innerHTML += `IPC Response: ${port}<br>`;
+                
+                if (port) {
+                    status.innerHTML += `Attempting connection to localhost:${port}<br>`;
+                    // Test socket connection
+                    const io = require('socket.io-client');
+                    const socket = io(`http://localhost:${port}`);
+                    
+                    socket.on('connect', () => {
+                        status.innerHTML += 'Socket connected successfully!<br>';
+                        status.style.color = 'green';
+                    });
+                    
+                    socket.on('connect_error', (error) => {
+                        status.innerHTML += `Socket connection failed: ${error}<br>`;
+                        status.style.color = 'red';
+                    });
+                } else {
+                    status.innerHTML += 'No port received from IPC<br>';
+                    status.style.color = 'red';
+                }
+            } catch (error) {
+                status.innerHTML += `Error: ${error.message}<br>`;
+                status.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
