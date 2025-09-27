@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TwinDesk - Real-time Chat & Screen Sharing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Page 1: Welcome Page -->
+        <div class="page welcome-page" id="welcome-page">
+            <div class="welcome-hero">
+                <div class="welcome-header">
+                    <div class="chat-icons">
+                        <i class="fa-solid fa-comments double-chat-icon"></i>
+                    </div>
+                    <h1 class="creative-title">
+                        <span class="title-main">Welcome to TwinDesk</span>
+                    </h1>
+                    <p class="welcome-subtitle">Your Gateway to Seamless Communication & Collaboration</p>
+                </div>
+            </div>
+            
+            <div class="features-section">
+                <div class="features-grid row-cols-lg-2  row-cols-md-2 row-cols-sm-1 g-4 ">
+                    <div class="feature-section">
+                        <div class="feature-icon">💬</div>
+                        <h3>Real-time Chat</h3>
+                        <p>Instant messaging with secure delivery and message history</p>
+                    </div>
+                    
+                    <div class="feature-section">
+                        <div class="feature-icon">🖥️</div>
+                        <h3>Screen Sharing</h3>
+                        <p>Share your screen in high quality with real-time streaming</p>
+                    </div>
+                    
+                    <div class="feature-section">
+                        <div class="feature-icon">🖱️</div>
+                        <h3>Remote Control</h3>
+                        <p>Take control of shared screens with mouse and keyboard access</p>
+                    </div>
+                    
+                    <div class="feature-section">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Secure & Encrypted</h3>
+                        <p>End-to-end encryption ensures all communications are private</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="start-section">
+                <button id="start-btn" class="btn btn-primary btn-large">Start</button>
+            </div>
+        </div>
+
+        <!-- Page 2: Username Entry Page -->
+        <div class="username-page" id="username-page">
+            <div class="username-container">
+                <h2>Enter Your Username</h2>
+                <div class="username-form">
+                    <input type="text" id="username-input" placeholder="Your username" maxlength="20">
+                    
+                    <!-- Connection Mode Selection -->
+                    <div class="connection-mode">
+                        <label>
+                            <input type="radio" name="connection-mode" value="server" checked> 
+                            <span>🖥️ Host Session (Others connect to you)</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="connection-mode" value="client"> 
+                            <span>🔗 Join Session (Connect to someone else)</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Server IP Input (hidden by default) -->
+                    <div class="server-ip-container" id="server-ip-container" style="display: none;">
+                        <input type="text" id="server-ip-input" placeholder="Enter server IP address (e.g., 192.168.1.100)">
+                        <small>Ask the host for their IP address</small>
+                    </div>
+                    
+                    <button id="connect-btn" class="btn btn-primary">Connect</button>
+                    
+                    <!-- Connection Info for Host -->
+                    <div class="connection-info" id="connection-info" style="display: none;">
+                        <h4>📋 Share this information with others:</h4>
+                        <div class="info-item">
+                            <strong>Your IP:</strong> <span id="host-ip">Loading...</span>
+                            <button id="copy-ip-btn" class="btn btn-small">Copy</button>
+                        </div>
+                        <div class="info-item">
+                            <strong>Port:</strong> <span id="host-port">3000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Dashboard Page -->
+        <div class="page dashboard-page" id="dashboard-page" style="display: none;">
+            <div class="user-corner">
+                <div class="online-indicator">
+                    <span id="current-user-display">User</span>
+                    <div class="green-dot"></div>
+                    <span>Online</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="dashboard-form">
+                    <div class="welcome-section">
+                        <h1>Welcome <span id="welcome-username">User</span>!</h1>
+                    </div>
+
+                    <div class="find-users-section">
+                        <h2>Active users with online status</h2>
+                        <div class="users-list" id="users-list">
+                            <!-- Online users will be populated here -->
+                        </div>
+                        <div class="no-users-placeholder" id="no-users-placeholder" style="display: none;">
+                            <div class="placeholder-box">
+                                <p>No online users</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Page 4: Chat Page -->
+        <div class="page chat-page" id="chat-page" style="display: none;">
+            <div class="chat-layout">
+                <!-- Sidebar with Online Users -->
+                <aside class="chat-sidebar">
+                    <div class="sidebar-header">
+                        <button id="back-to-dashboard" class="back-btn">
+                            <i class="fa-solid fa-arrow-left"></i> Back
+                        </button>
+                        <h3>Online Users</h3>
+                    </div>
+                    <div class="sidebar-users-list" id="sidebar-users-list">
+                        <!-- Online users will be populated here -->
+                    </div>
+                </aside>
+
+                <!-- Main Chat Section -->
+                <main class="chat-main">
+                    <!-- Chat Header -->
+                    <header class="chat-header">
+                        <div class="chat-user-info">
+                            <div class="chat-user-avatar" id="chat-user-avatar">
+                                U
+                            </div>
+                            <div class="chat-user-details">
+                                <h3 id="chat-partner-name">Chat Partner</h3>
+                                <span class="chat-status" id="chat-status">
+                                    <span class="status-dot online"></span>
+                                    Online
+                                </span>
+                            </div>
+                        </div>
+                        <div class="chat-controls">
+                            <button id="screen-share-btn" class="control-btn" title="Screen Share">
+                                <i class="fa-solid fa-desktop"></i>
+                            </button>
+                            <button id="remote-control-btn" class="control-btn" title="Remote Control">
+                                <i class="fa-solid fa-mouse-pointer"></i>
+                            </button>
+                            <button id="end-chat-btn" class="control-btn end-btn" title="End Session">
+                                <i class="fa-solid fa-phone-slash"></i>
+                            </button>
+                        </div>
+                    </header>
+
+                    <!-- Chat Messages Area -->
+                    <div class="chat-messages" id="messages-container">
+                        <!-- Messages will be populated here -->
+                        <div class="remote-control-indicator" id="remote-control-indicator">
+                            <i class="fa-solid fa-mouse-pointer"></i>
+                            Remote Control Active
+                        </div>
+                    </div>
+
+                    <!-- Screen Share Container -->
+                    <div class="screen-share-container" id="screen-share-container" style="display: none;">
+                        <div class="screen-share-header">
+                            <span id="screen-share-status">Screen Sharing Active</span>
+                            <div class="screen-share-controls">
+                                <button id="stop-screen-share" class="btn btn-small" style="display: none;">Stop Sharing</button>
+                                <button id="stop-viewing" class="btn btn-small" style="display: none;">Stop Viewing</button>
+                            </div>
+                        </div>
+                        <div class="screen-display">
+                            <canvas id="screen-canvas"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Message Input Area -->
+                    <div class="message-input-area">
+                        <div class="input-controls">
+                            <button class="input-control-btn" id="file-attach-btn" title="Attach File">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </button>
+                            <button class="input-control-btn" id="emoji-btn" title="Emojis">
+                                <i class="fa-solid fa-face-smile"></i>
+                            </button>
+                        </div>
+                        <input type="text" id="message-input" placeholder="Type your message..." maxlength="500">
+                        <button id="send-btn" class="send-btn" title="Send Message">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modal-overlay" style="display: none;">
+        <div class="modal" id="chat-request-modal">
+            <div class="modal-header">
+                <h3>Chat Request</h3>
+            </div>
+            <div class="modal-body">
+                <p id="chat-request-message">User wants to start a chat with you</p>
+            </div>
+            <div class="modal-actions">
+                <button id="accept-chat-btn" class="btn btn-primary">Accept</button>
+                <button id="decline-chat-btn" class="btn btn-secondary">Decline</button>
+            </div>
+        </div>
+
+        <div class="modal" id="screen-share-request-modal">
+            <div class="modal-header">
+                <h3>Screen Share Request</h3>
+            </div>
+            <div class="modal-body">
+                <p id="screen-share-request-message">User wants to share their screen</p>
+            </div>
+            <div class="modal-actions">
+                <button id="accept-screen-share-btn" class="btn btn-primary">Accept</button>
+                <button id="decline-screen-share-btn" class="btn btn-secondary">Decline</button>
+            </div>
+        </div>
+
+        <div class="modal" id="remote-control-request-modal">
+            <div class="modal-header">
+                <h3>Remote Control Request</h3>
+            </div>
+            <div class="modal-body">
+                <p id="remote-control-request-message">User wants to control your screen</p>
+            </div>
+            <div class="modal-actions">
+                <button id="accept-remote-control-btn" class="btn btn-primary">Accept</button>
+                <button id="decline-remote-control-btn" class="btn btn-secondary">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="connection-config.js"></script>
+    <script src="renderer.js"></script>
+</body>
+</html>
